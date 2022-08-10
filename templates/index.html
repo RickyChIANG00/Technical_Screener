@@ -1,0 +1,74 @@
+<html>
+<head>
+    <style>
+        body {font-family: Arial;}
+        td {padding: 10px;}
+        .bullish{background: green; color: white;}
+        .bearish{background: red; color: white;}
+    </style>
+</head>    
+<body>
+    <h1>Tachnical screener</h1>
+    <h4>by Rick Chiang</h4>
+
+    <form>
+        <select name = "pattern">
+            {% for pattern in patterns %}
+            <option value = "{{pattern}}" {% if pattern == current_pattern %}selected = "selected"{% endif %}>{{patterns[pattern]}}</option>
+            {% endfor %}
+        </select>
+
+        <select name = "sector">
+            {% for sector in sectors %}
+            <option value = "{{sector}}" {% if sector == current_sector %}selected = "selected"{% endif %}>{{sector}}</option>
+            {% endfor %}
+        </select>
+
+        <input type="submit" value = "scan" />
+    </form>
+
+    <table>
+        <tr style="border: 1px solid black;">
+            <th style="border: 1px solid grey;">
+                Symbol
+            </th>
+            <th style="border: 1px solid grey;">
+                Company
+            </th>
+            <th style="border: 1px solid grey;">
+                Sector
+            </th>
+            <th style="border: 1px solid grey;">
+                Signal
+            </th>
+        </tr>
+        {% for stock in stocks %}
+            {% if stocks[stock][current_pattern] and stocks[stock]['sector'] == current_sector %}
+            <tr style="border: 1px solid black;"> 
+                <td>{{ stock }}</td>
+                <td>{{stocks[stock]['company']}}</td>
+                <td>{{stocks[stock]['sector']}}</td>
+                <td class = {{stocks[stock][current_pattern]}}>{{stocks[stock][current_pattern]}}</td>
+            </tr>
+            <tr style="border: 1px solid black;">
+                <td colspan="4">
+                    <img src="https://finviz.com/chart.ashx?t={{ stock }}&ty=c&ta=1&p=d&s=l"/>
+                </td>
+            </tr>
+            {% elif stocks[stock][current_pattern] and current_sector == "ALL" %}
+            <tr style="border: 1px solid black;">
+                <td>{{ stock }}</td>
+                <td>{{stocks[stock]['company']}}</td>
+                <td>{{stocks[stock]['sector']}}</td>
+                <td class = {{stocks[stock][current_pattern]}}>{{stocks[stock][current_pattern]}}</td>
+            </tr>
+            <tr style="border: 1px solid black;">
+                <td colspan="4">
+                    <img src="https://finviz.com/chart.ashx?t={{ stock }}&ty=c&ta=1&p=d&s=l"/>
+                </td>
+            </tr>
+            {% endif %}
+        {% endfor %}
+    </table>
+</body>
+</html>
